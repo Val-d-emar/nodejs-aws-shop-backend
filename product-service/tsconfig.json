@@ -29,6 +29,7 @@
       "aws-lambda",
       "jest"
     ],
+    "isolatedModules": true,
     "outDir": "dist"
   },
   "include": [
