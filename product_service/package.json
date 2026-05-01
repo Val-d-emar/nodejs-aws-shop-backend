@@ -1,8 +1,8 @@
 {
-  "name": "product-service",
+  "name": "product_service",
   "version": "0.1.0",
   "bin": {
-    "product-service": "bin/product-service.js"
+    "product-service": "bin/product_service.js"
   },
   "scripts": {
     "build": "tsc",
