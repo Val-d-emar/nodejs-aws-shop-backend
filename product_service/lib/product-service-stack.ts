@@ -41,6 +41,14 @@ export class ProductServiceStack extends cdk.Stack {
       handler: "handler",
     });
 
+    const createProduct = new NodejsFunction(this, "CreateProduct", {
+      ...lambdaProps,
+      entry: path.join(__dirname, "../src/handlers/createProduct.ts"),
+    });
+
+    productsTable.grantWriteData(createProduct);
+    stocksTable.grantWriteData(createProduct);
+
     productsTable.grantReadData(getProductsList);
     stocksTable.grantReadData(getProductsList);
 
@@ -65,5 +73,6 @@ export class ProductServiceStack extends cdk.Stack {
     const product = products.addResource("{productId}");
 
     product.addMethod("GET", new apigateway.LambdaIntegration(getProductsById));
+    products.addMethod("POST", new apigateway.LambdaIntegration(createProduct));
   }
 }
