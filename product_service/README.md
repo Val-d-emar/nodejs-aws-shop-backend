@@ -1,14 +1,19 @@
-# Welcome to your CDK TypeScript project
+# Task 4: Integration with DynamoDB
 
-This is a blank project for CDK development with TypeScript.
+## Links
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
+- **API Endpoint:** [https://jco1jj7ev7.execute-api.eu-north-1.amazonaws.com/prod/products](https://jco1jj7ev7.execute-api.eu-north-1.amazonaws.com/prod/products)
+- **Frontend App (CloudFront):** [https://dhoyc6sbijzzm.cloudfront.net](https://dhoyc6sbijzzm.cloudfront.net)
+- **Frontend PR:** [https://github.com/Val-d-emar/nodejs-aws-shop-react/pull/3](https://github.com/Val-d-emar/nodejs-aws-shop-react/pull/3)
 
-## Useful commands
+## What was done?
 
-* `npm run build`   compile typescript to js
-* `npm run watch`   watch for changes and compile
-* `npm run test`    perform the jest unit tests
-* `npx cdk deploy`  deploy this stack to your default AWS account/region
-* `npx cdk diff`    compare deployed stack with current state
-* `npx cdk synth`   emits the synthesized CloudFormation template
+- [x] The `products` and `stocks` tables have been created in DynamoDB.
+- [x] Data filling script: `product_service/scripts/fill-tables.ts`.
+- [x] Lambdas are integrated with the database (DocumentClient is used).
+- [x] A POST request has been implemented to create a product.
+- [x] **Additionally:** Input data validation (400 error).
+- [x] **Additionally:** Transactional record in two tables.
+- [x] **Additionally:** Logging of all requests.
+- [x] **Additionally:** Handling unexpected errors (500 error).
+- [x] **FE** fixed.
