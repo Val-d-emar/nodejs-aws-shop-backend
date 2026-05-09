@@ -10,6 +10,9 @@ export const handler = async (
   event: APIGatewayProxyEvent,
 ): Promise<APIGatewayProxyResult> => {
   console.log("Incoming request: getProductsList");
+  console.log(`Incoming method + path: ${event.httpMethod} ${event.path}`);
+  console.log("Full event:", JSON.stringify(event)); 
+
   try {
     const [productsResult, stocksResult] = await Promise.all([
       docClient.send(

@@ -9,7 +9,11 @@ const docClient = DynamoDBDocumentClient.from(client);
 export const handler = async (
   event: APIGatewayProxyEvent,
 ): Promise<APIGatewayProxyResult> => {
-  console.log("Incoming request: getProductsById", event.pathParameters);
+  console.log("Incoming request: getProductsById");
+  console.log(`Incoming method + path: ${event.httpMethod} ${event.path}`);
+  console.log("Path parameters:", JSON.stringify(event.pathParameters));
+  console.log("Full event:", JSON.stringify(event));
+
   try {
     const { productId } = event.pathParameters || {};
 
