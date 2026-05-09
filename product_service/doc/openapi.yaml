@@ -11,14 +11,27 @@ paths:
     get:
       summary: Get all products
       responses:
-        '200':
+        "200":
           description: A list of products
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Product'
+                  $ref: "#/components/schemas/Product"
+    post:
+      summary: Create a new product
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateProductRequest"
+      responses:
+        "201":
+          description: Product created
+        "400":
+          description: Invalid input
   /products/{productId}:
     get:
       summary: Get product by ID
@@ -29,13 +42,13 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Product'
-        '404':
+                $ref: "#/components/schemas/Product"
+        "404":
           description: Product not found
 components:
   schemas:
@@ -50,4 +63,20 @@ components:
         description:
           type: string
         price:
+          type: number
+        count:
+          type: number
+          description: "Quantity in stock"
+
+    CreateProductRequest:
+      type: object
+      required: [title, description, price, count]
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+        count:
           type: number
