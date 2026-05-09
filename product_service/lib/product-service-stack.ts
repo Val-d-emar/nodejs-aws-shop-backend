@@ -60,13 +60,8 @@ export class ProductServiceStack extends cdk.Stack {
       defaultCorsPreflightOptions: {
         allowOrigins: apigateway.Cors.ALL_ORIGINS,
         allowMethods: apigateway.Cors.ALL_METHODS,
-        allowHeaders: [
-          "Content-Type",
-          "Authorization",
-          "X-Amz-Date",
-          "X-Api-Key",
-          "X-Amz-Security-Token",
-        ],
+        allowHeaders: apigateway.Cors.DEFAULT_HEADERS, // ['Content-Type', 'X-Amz-Date', 'Authorization', ...]
+        allowCredentials: true,
       },
     });
 
