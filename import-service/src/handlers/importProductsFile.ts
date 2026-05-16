@@ -40,6 +40,7 @@ export const handler = async (
       headers: {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Credentials": true,
+        "Content-Type": "text/plain",
       },
       body: signedUrl,
     };
