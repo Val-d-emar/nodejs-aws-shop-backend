@@ -28,7 +28,7 @@ export class ImportServiceStack extends cdk.Stack {
     });
 
     const importFileParser = new NodejsFunction(this, "ImportFileParser", {
-      runtime: lambda.Runtime.NODEJS_20_X,
+      runtime: lambda.Runtime.NODEJS_24_X,
       entry: path.join(__dirname, "../src/handlers/importFileParser.ts"),
       handler: "handler",
       environment: {
