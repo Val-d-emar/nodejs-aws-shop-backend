@@ -1,24 +1,14 @@
-# Product Service (Backend)
+# Welcome to your CDK TypeScript project
 
-- **API URL:** [https://jco1jj7ev7.execute-api.eu-north-1.amazonaws.com/prod/products](https://jco1jj7ev7.execute-api.eu-north-1.amazonaws.com/prod/products)
-- **Frontend URL:** [https://dhoyc6sbijzzm.cloudfront.net](https://dhoyc6sbijzzm.cloudfront.net)
-- **Swagger Doc:** [product_service/doc/openapi.yaml](./product_service/doc/openapi.yaml)
+This is a blank project for CDK development with TypeScript.
 
-# Task 5 (Integration with S3)
+The `cdk.json` file tells the CDK Toolkit how to execute your app.
 
-## Links
+## Useful commands
 
-- **API Endpoint:** [https://jco1jj7ev7.execute-api.eu-north-1.amazonaws.com/prod/products](https://jco1jj7ev7.execute-api.eu-north-1.amazonaws.com/prod/products)
-- **Frontend App (CloudFront):** [https://dhoyc6sbijzzm.cloudfront.net](https://dhoyc6sbijzzm.cloudfront.net)
-- **Frontend PR:** []()
-- **Swagger file:** [product_service/doc/openapi.yaml](https://github.com/Val-d-emar/nodejs-aws-shop-backend/blob/task-5/product_service/doc/openapi.yaml)
-
-## What was done?
-
-- [ ] AWS CDK Stack contains configuration for `importProductsFile` function
-- [ ] The `importProductsFile` lambda function returns a correct response which can be used to upload a file into the S3 bucket
-- [ ] Frontend application is integrated with `importProductsFile` lambda
-- [ ] The `importFileParser` lambda function is implemented and AWS CDK. Stack contains configuration for the lambda
-- [ ] **+10** **(All languages)** -  `importProductsFile` lambda is covered by _unit tests_.  You should consider to mock S3 and other AWS SDK methods so not trigger actual AWS services while unit testing.
-- [ ] **+10** **(All languages)** -  `importFileParser` lambda is covered by _unit tests_.
-- [ ] **+10** **(All languages)** - At the end of the stream the lambda function should move the file from the `uploaded` folder into the `parsed` folder (`move the file` means that file should be copied into a new folder in the same bucket called `parsed`, and then deleted from `uploaded` folder)
+* `npm run build`   compile typescript to js
+* `npm run watch`   watch for changes and compile
+* `npm run test`    perform the jest unit tests
+* `npx cdk deploy`  deploy this stack to your default AWS account/region
+* `npx cdk diff`    compare deployed stack with current state
+* `npx cdk synth`   emits the synthesized CloudFormation template
