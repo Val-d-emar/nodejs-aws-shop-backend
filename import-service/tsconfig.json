@@ -26,7 +26,8 @@
     ],
     "types": [
       "node",
-      "aws-lambda"
+      "aws-lambda",
+      "jest"
     ],
   },
   "exclude": [
@@ -36,6 +37,7 @@
   "include": [
     "bin/**/*.ts",
     "lib/**/*.ts",
-    "src/**/*.ts"
+    "src/**/*.ts",
+    "test/**/*.ts"
   ]
 }
