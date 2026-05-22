@@ -1,0 +1,31 @@
+openapi: 3.0.0
+info:
+  title: Import Service API
+  description: API for getting signed URLs to upload CSV files to S3
+  version: 1.0.0
+servers:
+  - url: https://pko6smj112.execute-api.eu-north-1.amazonaws.com/prod
+    description: Production server
+paths:
+  /import:
+    get:
+      summary: Get a signed URL for file upload
+      parameters:
+        - name: name
+          in: query
+          required: true
+          description: Name of the CSV file to be uploaded
+          schema:
+            type: string
+      responses:
+        "200":
+          description: A signed URL for uploading the file
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "https://rs-shop-import-bucket.s3.amazonaws.com/uploaded/test.csv?X-Amz-..."
+        "400":
+          description: Missing "name" parameter
+        "500":
+          description: Internal server error
