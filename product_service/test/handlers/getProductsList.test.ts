@@ -3,7 +3,6 @@ import { products } from "../../src/mocks/products";
 import { DynamoDBDocumentClient, ScanCommand } from "@aws-sdk/lib-dynamodb";
 import { mockClient } from "aws-sdk-client-mock";
 
-// Создаем заглушку для DynamoDB
 const ddbMock = mockClient(DynamoDBDocumentClient);
 
 describe("getProductsList handler", () => {

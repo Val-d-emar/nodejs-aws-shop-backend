@@ -51,20 +51,17 @@ describe("catalogBatchProcess handler", () => {
 
     await handler(event);
 
-    // Проверяем, что была вызвана запись в БД
     expect(dynamoMock.calls()).toHaveLength(1);
 
-    // Проверяем, что была вызвана отправка в SNS
     expect(snsMock.calls()).toHaveLength(1);
 
-    // Проверяем правильность атрибутов в SNS (для фильтра цены)
     const snsArgs = snsMock.call(0).args[0].input as any;
     expect(snsArgs.MessageAttributes.price.StringValue).toBe("150");
   });
 
   it("should skip invalid records", async () => {
     const invalidProductData = {
-      title: "", // пустое поле, должно пропустить
+      title: "",
       price: "invalid",
     };
 
@@ -78,7 +75,6 @@ describe("catalogBatchProcess handler", () => {
 
     await handler(event);
 
-    // Убеждаемся, что база и SNS не вызывались для невалидных данных
     expect(dynamoMock.calls()).toHaveLength(0);
     expect(snsMock.calls()).toHaveLength(0);
   });
