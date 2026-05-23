@@ -59,7 +59,7 @@ export const handler = async (event: SQSEvent): Promise<void> => {
         MessageAttributes: {
           price: {
             DataType: 'Number',
-            StringValue: parsedPrice.toString(),
+            StringValue: String(parsedPrice),
           }
         }
       });
