@@ -108,6 +108,11 @@ export class ProductServiceStack extends cdk.Stack {
       exportName: "CatalogItemsQueueUrl",
     });
 
+    new cdk.CfnOutput(this, "CatalogItemsQueueArn", {
+      value: catalogItemsQueue.queueArn,
+      exportName: "CatalogItemsQueueArn",
+    });
+
     const api = new apigateway.RestApi(this, "ProductsApi", {
       restApiName: "Product Service",
       defaultCorsPreflightOptions: {
