@@ -64,10 +64,13 @@ export class ImportServiceStack extends cdk.Stack {
 
     const authorizerArn = cdk.Fn.importValue("BasicAuthorizerArn");
 
-    const basicAuthorizerLambda = lambda.Function.fromFunctionArn(
+    const basicAuthorizerLambda = lambda.Function.fromFunctionAttributes(
       this,
       "BasicAuthorizerLambda",
-      authorizerArn,
+      {
+        functionArn: authorizerArn,
+        sameEnvironment: true,
+      },
     );
 
     const authorizer = new apigateway.TokenAuthorizer(this, "BasicAuthorizer", {
