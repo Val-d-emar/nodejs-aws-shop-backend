@@ -23,10 +23,19 @@
     "skipLibCheck": true,
     "typeRoots": [
       "./node_modules/@types"
+    ],
+    "types": [
+      "node",
+      "aws-lambda"
     ]
   },
   "exclude": [
     "node_modules",
     "cdk.out"
+  ],
+  "include": [
+    "bin/**/*.ts",
+    "lib/**/*.ts",
+    "src/**/*.ts"
   ]
 }
