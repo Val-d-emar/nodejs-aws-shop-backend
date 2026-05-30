@@ -1,17 +1,12 @@
-## Task 6: SQS & SNS, Async Microservices Communication
+## Task 7 (Authorization)
 
 ### What was done:
-- [x] Created an SQS queue `catalogItemsQueue` in the Product Service stack.
-- [x] Implemented the `catalogBatchProcess` lambda function triggered by SQS events (configured with `batchSize: 5`).
-- [x] Updated the `importFileParser` lambda in the Import Service to send parsed CSV records directly to the SQS queue instead of logging them.
-- [x] Implemented transaction-based product creation (writing to `products` and `stocks` DynamoDB tables simultaneously).
-- [x] Created an SNS Topic `createProductTopic` with an Email subscription.
-- [x] The `catalogBatchProcess` lambda successfully publishes an event to the SNS topic upon product creation.
-- [x] Implemented Cross-Stack references (Exports/Imports) for SQS URL and ARN to maintain dynamic and secure infrastructure.
+- [x] authorization-service is added to the repo, has correct basicAuthorizer lambda and correct AWS CDK Stack
+- [x] Import Service AWS CDK Stack has authorizer configuration for the importProductsFile lambda. Request to the importProductsFile lambda should work only with correct authorization_token being decoded and checked by basicAuthorizer lambda. Response should be in 403 HTTP status if access is denied for this user (invalid authorization_token) and in 401 HTTP status if Authorization header is not provided.
+- [x] Client application is updated to send "Authorization: Basic authorization_token" header on import. Client should get authorization_token value from browser localStorage
 
 ### Additional scope (Optional tasks):
-- [x] **+15** - `catalogBatchProcess` lambda is fully covered by unit tests (using AWS SDK mocks). Test output is kept clean.
-- [x] **+15** - Configured a **Filter Policy** for the SNS `createProductTopic`. Email notifications are distributed only if the product price is >= 100 (implemented via `MessageAttributes`).
+- [x] +30 - Client application should display alerts for the responses in 401 and 403 HTTP statuses. This behavior should be added to the nodejs-aws-fe-main/src/index.tsx file.
 
 ## Links:
 
