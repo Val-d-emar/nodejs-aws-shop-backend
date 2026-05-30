@@ -1,5 +1,5 @@
 import { handler } from "../../src/handlers/getProductsList";
-import { products } from "../../src/mocks/products";
+import { products } from "../mocks/products";
 import { DynamoDBDocumentClient, ScanCommand } from "@aws-sdk/lib-dynamodb";
 import { mockClient } from "aws-sdk-client-mock";
 
