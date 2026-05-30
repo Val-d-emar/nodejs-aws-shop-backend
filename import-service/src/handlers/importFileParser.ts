@@ -5,10 +5,12 @@ import {
   CopyObjectCommand,
   DeleteObjectCommand,
 } from "@aws-sdk/client-s3";
-const csv = require("csv-parser"); 
+const csv = require("csv-parser");
 import { Readable } from "stream";
+import { SQSClient, SendMessageCommand } from "@aws-sdk/client-sqs";
 
 const s3Client = new S3Client({});
+const sqsClient = new SQSClient({});
 
 export const handler = async (event: S3Event): Promise<void> => {
   console.log("Incoming S3 Event:", JSON.stringify(event));
@@ -24,10 +26,16 @@ export const handler = async (event: S3Event): Promise<void> => {
       const { Body } = await s3Client.send(getCommand);
 
       if (Body instanceof Readable) {
+        const sendPromises: Promise<any>[] = [];
+        
         await new Promise<void>((resolve, reject) => {
           Body.pipe(csv())
             .on("data", (data: any) => {
-              console.log("Parsed record:", data);
+              const command = new SendMessageCommand({
+                QueueUrl: process.env.SQS_URL,
+                MessageBody: JSON.stringify(data),
+              });
+              sendPromises.push(sqsClient.send(command));
             })
             .on("error", (error: Error) => {
               console.error("Error parsing CSV:", error);
@@ -38,6 +46,9 @@ export const handler = async (event: S3Event): Promise<void> => {
               resolve();
             });
         });
+        
+        await Promise.all(sendPromises);
+        console.log(`Successfully sent ${sendPromises.length} messages to SQS`);
 
         const parsedKey = key.replace("uploaded/", "parsed/");
 
