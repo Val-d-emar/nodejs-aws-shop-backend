@@ -62,6 +62,22 @@ export class ImportServiceStack extends cdk.Stack {
       { prefix: "uploaded/" },
     );
 
+    const authorizerArn = cdk.Fn.importValue("BasicAuthorizerArn");
+
+    const basicAuthorizerLambda = lambda.Function.fromFunctionAttributes(
+      this,
+      "BasicAuthorizerLambda",
+      {
+        functionArn: authorizerArn,
+        sameEnvironment: true,
+      },
+    );
+
+    const authorizer = new apigateway.TokenAuthorizer(this, "BasicAuthorizer", {
+      handler: basicAuthorizerLambda,
+      identitySource: apigateway.IdentitySource.header("Authorization"),
+    });
+
     const api = new apigateway.RestApi(this, "ImportApi", {
       restApiName: "Import Service",
       defaultCorsPreflightOptions: {
@@ -78,6 +94,19 @@ export class ImportServiceStack extends cdk.Stack {
       binaryMediaTypes: ["multipart/form-data"],
     });
 
+    api.addGatewayResponse("GatewayResponseUnauthorized", {
+      type: apigateway.ResponseType.UNAUTHORIZED,
+      responseHeaders: {
+        "Access-Control-Allow-Origin": "'*'",
+      },
+    });
+    api.addGatewayResponse("GatewayResponseAccessDenied", {
+      type: apigateway.ResponseType.ACCESS_DENIED,
+      responseHeaders: {
+        "Access-Control-Allow-Origin": "'*'",
+      },
+    });
+
     const importResource = api.root.addResource("import");
     importResource.addMethod(
       "GET",
@@ -86,6 +115,7 @@ export class ImportServiceStack extends cdk.Stack {
         requestParameters: {
           "method.request.querystring.name": true,
         },
+        authorizer: authorizer,
       },
     );
   }
