@@ -11,6 +11,9 @@ const fastify = Fastify({
 
 const PORT = process.env.PORT || 3000;
 
+let productsCache: { data: any; timestamp: number } | null = null;
+const CACHE_TTL = 2 * 60 * 1000; // 2 minutes
+
 fastify.register(cors, {
   origin: "*",
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
@@ -42,6 +45,20 @@ fastify.route({
     const remainingPath = "/" + parts.slice(1).join("/");
     const targetUrl = `${recipientUrl}${remainingPath}`;
 
+    const isGetProductsList =
+      request.method === "GET" &&
+      recipient === "product" &&
+      remainingPath === "/products";
+
+    if (
+      isGetProductsList &&
+      productsCache &&
+      Date.now() - productsCache.timestamp < CACHE_TTL
+    ) {
+      fastify.log.info("Returning getProductsList response from cache");
+      return reply.status(200).send(productsCache.data);
+    }
+
     const headers = { ...request.headers };
     delete headers.host;
 
@@ -54,6 +71,14 @@ fastify.route({
         headers: headers as any,
         data: request.body,
       });
+
+      if (isGetProductsList && response.status === 200) {
+        fastify.log.info("Caching getProductsList response");
+        productsCache = {
+          data: response.data,
+          timestamp: Date.now(),
+        };
+      }
 
       return reply.status(response.status).send(response.data);
     } catch (error) {
@@ -75,7 +100,6 @@ fastify.route({
     }
   },
 });
-
 
 const start = async () => {
   try {
