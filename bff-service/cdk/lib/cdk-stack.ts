@@ -31,7 +31,7 @@ export class CdkStack extends cdk.Stack {
       },
     );
 
-    new cdk.CfnOutput(this, "env.BFF_EB_URL", {
+    new cdk.CfnOutput(this, "envBFFebURL", {
       value: `${ebDomain}`,
     });
     new cdk.CfnOutput(this, "BffCloudFrontUrl", {

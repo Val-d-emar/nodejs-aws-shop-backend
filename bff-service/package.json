@@ -5,6 +5,8 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
+    "deploy": "cd cdk && npx cdk deploy",
+    "destroy": "cd cdk && npx cdk destroy",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
