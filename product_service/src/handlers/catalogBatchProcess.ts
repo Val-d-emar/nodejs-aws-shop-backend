@@ -1,18 +1,21 @@
-import { SQSEvent } from 'aws-lambda';
-import { DynamoDBClient, TransactWriteItemsCommand } from "@aws-sdk/client-dynamodb";
+import { SQSEvent } from "aws-lambda";
+import {
+  DynamoDBClient,
+  TransactWriteItemsCommand,
+} from "@aws-sdk/client-dynamodb";
 import { SNSClient, PublishCommand } from "@aws-sdk/client-sns";
-import { randomUUID } from 'crypto';
+import { randomUUID } from "crypto";
 
 const dynamoClient = new DynamoDBClient({});
 const snsClient = new SNSClient({});
 
 export const handler = async (event: SQSEvent): Promise<void> => {
-  console.log('Incoming SQS Event:', JSON.stringify(event));
+  console.log("Incoming SQS Event:", JSON.stringify(event));
 
   for (const record of event.Records) {
     try {
       const productData = JSON.parse(record.body);
-      const { title, description, price, count } = productData;
+      const { title, description, price, count, image } = productData;
 
       const parsedPrice = Number(price);
       const parsedCount = Number(count);
@@ -21,6 +24,9 @@ export const handler = async (event: SQSEvent): Promise<void> => {
         console.error(`Invalid product data skipped: ${record.body}`);
         continue;
       }
+      const finalImage =
+        image ||
+        "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=800";
 
       const id = randomUUID();
 
@@ -34,6 +40,7 @@ export const handler = async (event: SQSEvent): Promise<void> => {
                 title: { S: title },
                 description: { S: description },
                 price: { N: parsedPrice.toString() },
+                image: { S: finalImage },
               },
             },
           },
@@ -53,22 +60,21 @@ export const handler = async (event: SQSEvent): Promise<void> => {
       console.log(`Product created successfully: ${id} (${title})`);
 
       const publishCommand = new PublishCommand({
-        Subject: 'New Product Added to Catalog',
+        Subject: "New Product Added to Catalog",
         Message: `A new product "${title}" was successfully added to the database.\nDescription: ${description}\nPrice: $${parsedPrice}\nStock: ${parsedCount}`,
         TopicArn: process.env.SNS_ARN,
         MessageAttributes: {
           price: {
-            DataType: 'Number',
+            DataType: "Number",
             StringValue: String(parsedPrice),
-          }
-        }
+          },
+        },
       });
 
       await snsClient.send(publishCommand);
       console.log(`SNS message sent for product: ${title}`);
-
     } catch (error) {
-      console.error('Error processing SQS record:', error);
+      console.error("Error processing SQS record:", error);
     }
   }
 };
