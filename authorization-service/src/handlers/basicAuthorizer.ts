@@ -42,8 +42,11 @@ export const handler = async (
 
     const effect: StatementEffect =
       storedUserPassword && storedUserPassword === password ? "Allow" : "Deny";
+      
+    const methodArnBase = event.methodArn.split("/").slice(0, 2).join("/");
+    const allowAllResource = `${methodArnBase}/*`;
 
-    return generatePolicy(encodedCreds, effect, event.methodArn);
+    return generatePolicy(encodedCreds, effect, allowAllResource); 
   } catch (error) {
     console.error("Error in authorizer:", error);
     throw new Error("Unauthorized");
