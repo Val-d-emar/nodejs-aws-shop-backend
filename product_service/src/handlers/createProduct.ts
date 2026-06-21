@@ -21,7 +21,7 @@ export const handler = async (
   try {
     const body =
       typeof event.body === "string" ? JSON.parse(event.body) : event.body;
-    const { title, description, price, count } = body || {};
+    const { title, description, price, count, image } = body || {};
 
     if (
       !title ||
@@ -34,8 +34,11 @@ export const handler = async (
           "Invalid product data. title, description, price (number) and count (number) are required.",
       });
     }
+    const finalImage =
+      image ||
+      "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=800&auto=format&fit=crop";
 
-    const id = randomUUID();
+    const id = body.id || randomUUID();
 
     const transaction = new TransactWriteItemsCommand({
       TransactItems: [
@@ -47,6 +50,7 @@ export const handler = async (
               title: { S: title },
               description: { S: description },
               price: { N: price.toString() },
+              image: { S: finalImage },
             },
           },
         },
@@ -64,7 +68,14 @@ export const handler = async (
 
     await docClient.send(transaction);
 
-    return formatJSONResponse(201, { id, title, description, price, count });
+    return formatJSONResponse(201, {
+      id,
+      title,
+      description,
+      price,
+      count,
+      image: finalImage,
+    });
   } catch (error) {
     console.error("Error in createProduct:", error);
     return formatJSONResponse(500, {

@@ -42,6 +42,9 @@ export const handler = async (
 
     const product = {
       ...productResult.Item,
+      image:
+        productResult.Item.image ||
+        "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=800&auto=format&fit=crop",
       count: stockResult.Item ? stockResult.Item.count : 0,
     };
 
