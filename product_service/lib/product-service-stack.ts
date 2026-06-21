@@ -74,6 +74,29 @@ export class ProductServiceStack extends cdk.Stack {
       entry: path.join(__dirname, "../src/handlers/createProduct.ts"),
     });
 
+    const deleteProduct = new NodejsFunction(this, "DeleteProduct", {
+      ...lambdaProps,
+      entry: path.join(__dirname, "../src/handlers/deleteProduct.ts"),
+    });
+
+    productsTable.grantWriteData(deleteProduct);
+    stocksTable.grantWriteData(deleteProduct);
+
+    const authorizerArn = cdk.Fn.importValue("BasicAuthorizerArn");
+    const basicAuthorizerLambda = lambda.Function.fromFunctionAttributes(
+      this,
+      "BasicAuthorizerLambda",
+      {
+        functionArn: authorizerArn,
+        sameEnvironment: true,
+      },
+    );
+
+    const authorizer = new apigateway.TokenAuthorizer(this, "BasicAuthorizer", {
+      handler: basicAuthorizerLambda,
+      identitySource: apigateway.IdentitySource.header("Authorization"),
+    });
+
     const catalogBatchProcess = new NodejsFunction(
       this,
       "CatalogBatchProcess",
@@ -131,6 +154,14 @@ export class ProductServiceStack extends cdk.Stack {
     );
 
     const product = products.addResource("{productId}");
+
+    product.addMethod(
+      "DELETE",
+      new apigateway.LambdaIntegration(deleteProduct),
+      {
+        authorizer: authorizer,
+      },
+    );
 
     product.addMethod("GET", new apigateway.LambdaIntegration(getProductsById));
     products.addMethod("POST", new apigateway.LambdaIntegration(createProduct));

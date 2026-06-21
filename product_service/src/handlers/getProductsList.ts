@@ -11,7 +11,7 @@ export const handler = async (
 ): Promise<APIGatewayProxyResult> => {
   console.log("Incoming request: getProductsList");
   console.log(`Incoming method + path: ${event.httpMethod} ${event.path}`);
-  console.log("Full event:", JSON.stringify(event)); 
+  console.log("Full event:", JSON.stringify(event));
 
   try {
     const [productsResult, stocksResult] = await Promise.all([
@@ -28,6 +28,9 @@ export const handler = async (
       const stock = stocks.find((s) => s.product_id === product.id);
       return {
         ...product,
+        image:
+          product.image ||
+          "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=800&auto=format&fit=crop",
         count: stock ? stock.count : 0,
       };
     });
